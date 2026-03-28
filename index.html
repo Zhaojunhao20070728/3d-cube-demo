@@ -1,318 +1,56 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D 渐变立方体</title>
+    <title>汽车从右上角驶入中心</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
             min-height: 100vh;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-            font-family: 'Segoe UI', Arial, sans-serif;
-            color: #e6e6e6;
+            background-color: #000;
             overflow: hidden;
-        }
-        
-        .container {
-            text-align: center;
-            padding: 20px;
-        }
-        
-        h1 {
-            margin-bottom: 30px;
-            font-size: 2.5rem;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-            background: linear-gradient(90deg, #ff9a9e, #fad0c4, #fad0c4, #a1c4fd);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            background-size: 300% 100%;
-            animation: gradient 5s ease infinite;
-        }
-        
-        .cube-container {
-            width: 300px;
-            height: 300px;
-            margin: 0 auto 40px;
-            perspective: 1200px;
-        }
-        
-        .cube {
-            width: 100%;
-            height: 100%;
             position: relative;
-            transform-style: preserve-3d;
-            transform: translateZ(-150px) rotateX(-15deg) rotateY(15deg);
-            animation: rotate 20s infinite linear;
         }
-        
-        /* 立方体面通用样式 */
-        .face {
+
+        .car-container {
             position: absolute;
-            width: 200px;
-            height: 200px;
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-weight: bold;
-            font-size: 1.5rem;
-            color: rgba(255, 255, 255, 0.9);
-            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+            top: 0;
+            right: 0;
+            width: 150px;
+            height: auto;
+            transform-origin: center center;
+            animation: driveToCenter 5s ease-out forwards;
         }
-        
-        /* 前面 - 红色渐变 */
-        .front {
-            background: linear-gradient(135deg, #ff416c, #ff4b2b);
-            transform: translateZ(100px);
+
+        .car {
+            width: 100%;
+            height: auto;
+            display: block;
         }
-        
-        /* 后面 - 紫色渐变 */
-        .back {
-            background: linear-gradient(135deg, #654ea3, #da98b4);
-            transform: rotateY(180deg) translateZ(100px);
-        }
-        
-        /* 右面 - 蓝色渐变 */
-        .right {
-            background: linear-gradient(135deg, #2193b0, #6dd5ed);
-            transform: rotateY(90deg) translateZ(100px);
-        }
-        
-        /* 左面 - 绿色渐变 */
-        .left {
-            background: linear-gradient(135deg, #11998e, #38ef7d);
-            transform: rotateY(-90deg) translateZ(100px);
-        }
-        
-        /* 顶面 - 橙色渐变 */
-        .top {
-            background: linear-gradient(135deg, #f46b45, #eea849);
-            transform: rotateX(90deg) translateZ(100px);
-        }
-        
-        /* 底面 - 粉色渐变 */
-        .bottom {
-            background: linear-gradient(135deg, #ec008c, #fc6767);
-            transform: rotateX(-90deg) translateZ(100px);
-        }
-        
-        /* 控制面板 */
-        .controls {
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 15px;
-            padding: 20px;
-            max-width: 500px;
-            margin: 0 auto;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-        
-        .control-group {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-        
-        button {
-            padding: 10px 20px;
-            background: linear-gradient(135deg, #4776E6, #8E54E9);
-            border: none;
-            border-radius: 30px;
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-        }
-        
-        button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
-        }
-        
-        button:active {
-            transform: translateY(1px);
-        }
-        
-        .code-preview {
-            background: rgba(0, 0, 0, 0.5);
-            border-radius: 10px;
-            padding: 20px;
-            text-align: left;
-            font-family: 'Courier New', monospace;
-            font-size: 0.9rem;
-            max-height: 200px;
-            overflow-y: auto;
-            margin-top: 20px;
-        }
-        
-        .code-preview h3 {
-            margin-bottom: 10px;
-            color: #4a9eff;
-        }
-        
-        .highlight {
-            color: #ff9d5c;
-        }
-        
-        /* 动画 */
-        @keyframes rotate {
-            0% { transform: translateZ(-150px) rotateX(0deg) rotateY(0deg); }
-            100% { transform: translateZ(-150px) rotateX(360deg) rotateY(360deg); }
-        }
-        
-        @keyframes gradient {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-        
-        .info {
-            margin-top: 20px;
-            font-size: 0.9rem;
-            color: #aaa;
-            line-height: 1.5;
-        }
-        
-        /* 响应式设计 */
-        @media (max-width: 600px) {
-            .cube-container {
-                width: 250px;
-                height: 250px;
+
+        @keyframes driveToCenter {
+            0% {
+                top: 0;
+                right: 0;
+                transform: scale(0.3) rotate(0deg);
             }
-            
-            .face {
-                width: 150px;
-                height: 150px;
-                font-size: 1.2rem;
-            }
-            
-            h1 {
-                font-size: 1.8rem;
+            100% {
+                top: 50%;
+                right: 50%;
+                transform: scale(1) translate(50%, -50%) rotate(0deg);
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>3D 渐变立方体</h1>
-        
-        <div class="cube-container">
-            <div class="cube" id="cube">
-                <div class="face front">前面</div>
-                <div class="face back">后面</div>
-                <div class="face right">右面</div>
-                <div class="face left">左面</div>
-                <div class="face top">顶面</div>
-                <div class="face bottom">底面</div>
-            </div>
-        </div>
-        
-        <div class="controls">
-            <div class="control-group">
-                <button id="stopAnimation">停止旋转</button>
-                <button id="startAnimation">开始旋转</button>
-                <button id="resetCube">重置位置</button>
-                <button id="applySkew">应用倾斜</button>
-            </div>
-            
-            <div class="code-preview">
-                <h3>核心代码片段：</h3>
-                <pre>
-.cube {
-    transform-style: preserve-3d;
-    <span class="highlight">transform: translateZ(-150px)</span> rotateX(-15deg) rotateY(15deg);
-}
-
-.front {
-    <span class="highlight">background: linear-gradient(135deg, #ff416c, #ff4b2b);</span>
-    transform: translateZ(100px);
-}
-
-.right {
-    background: linear-gradient(135deg, #2193b0, #6dd5ed);
-    transform: <span class="highlight">rotateY(90deg)</span> translateZ(100px);
-}
-
-/* 倾斜变换示例 */
-.skewed {
-    <span class="highlight">transform: translateZ(-150px) skewX(10deg) skewY(-5deg);</span>
-}
-                </pre>
-            </div>
-            
-            <div class="info">
-                这个3D立方体使用CSS的transform属性创建，每个面都应用了linear-gradient背景。
-                使用了translateZ、rotateX、rotateY、skewX和skewY等3D变换。
-            </div>
-        </div>
+    <div class="car-container">
+        < img src="https://i.imgur.com/K5wQkRq.jpg" alt="橙色跑车" class="car">
     </div>
-
-    <script>
-        const cube = document.getElementById('cube');
-        const stopBtn = document.getElementById('stopAnimation');
-        const startBtn = document.getElementById('startAnimation');
-        const resetBtn = document.getElementById('resetCube');
-        const skewBtn = document.getElementById('applySkew');
-        
-        let isRotating = true;
-        
-        // 停止动画
-        stopBtn.addEventListener('click', () => {
-            cube.style.animationPlayState = 'paused';
-            isRotating = false;
-        });
-        
-        // 开始动画
-        startBtn.addEventListener('click', () => {
-            cube.style.animationPlayState = 'running';
-            isRotating = true;
-        });
-        
-        // 重置立方体位置
-        resetBtn.addEventListener('click', () => {
-            cube.style.animation = 'none';
-            cube.style.transform = 'translateZ(-150px) rotateX(-15deg) rotateY(15deg)';
-            
-            // 重新应用动画
-            setTimeout(() => {
-                if (isRotating) {
-                    cube.style.animation = 'rotate 20s infinite linear';
-                }
-            }, 10);
-        });
-        
-        // 应用倾斜变换
-        skewBtn.addEventListener('click', () => {
-            cube.style.animation = 'none';
-            
-            // 应用skewX和skewY变换
-            cube.style.transform = 'translateZ(-150px) rotateX(-15deg) rotateY(15deg) skewX(10deg) skewY(-5deg)';
-            
-            // 3秒后恢复
-            setTimeout(() => {
-                cube.style.transform = 'translateZ(-150px) rotateX(-15deg) rotateY(15deg)';
-                if (isRotating) {
-                    cube.style.animation = 'rotate 20s infinite linear';
-                }
-            }, 3000);
-        });
-        
-        // 初始状态：立方体自动旋转
-        cube.style.animation = 'rotate 20s infinite linear';
-    </script>
 </body>
 </html>
